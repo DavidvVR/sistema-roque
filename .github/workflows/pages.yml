@@ -1,0 +1,42 @@
+name: Deploy to GitHub Pages
+on:
+  push: { branches: [ main ] }
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+      - run: npm ci
+      # IMPORTANTE: usar base-href con el nombre del repo
+      - run: npx ng build --configuration production --base-href /sistema-roque/
+      - name: Locate dist
+        id: dist
+        run: echo "path=$(ls -d dist/*/browser | head -n1)" >> $GITHUB_OUTPUT
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: ${{ steps.dist.outputs.path }}
+
+  deploy:
+    needs: build
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4
