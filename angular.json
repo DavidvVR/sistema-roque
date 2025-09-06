@@ -17,6 +17,18 @@
         "build": {
           "builder": "@angular/build:application",
           "options": {
+            "styles": [
+              "node_modules/bootstrap/dist/css/bootstrap.min.css",
+              "node_modules/admin-lte/dist/css/adminlte.min.css",
+              "node_modules/@fortawesome/fontawesome-free/css/all.min.css",
+              "src/styles.scss"
+            ],
+            "scripts": [
+              // Agrega estos SOLO si más adelante usas JS de AdminLTE:
+              // "node_modules/jquery/dist/jquery.min.js",
+              // "node_modules/bootstrap/dist/js/bootstrap.bundle.min.js",
+              // "node_modules/admin-lte/dist/js/adminlte.min.js"
+            ]
             "browser": "src/main.ts",
             "polyfills": [
               "zone.js"
